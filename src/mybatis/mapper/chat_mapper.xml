@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.chat">
+
+<resultMap type="ChatDto" id="ChatList">
+	<result property="chatNo" column="CHATNO"/>
+	<result property="chatName" column="CHATNAME"/>
+	<result property="chatContent" column="CHATCONTENT"/>
+	<result property="chatTime" column="CHATTIME"/>
+</resultMap>
+
+	<select id="getChatListSql" parameterType="String" resultMap="ChatList">
+		<![CDATA[
+			SELECT CHATNO,CHATNAME,CHATCONTENT,CHATTIME
+			FROM CHAT WHERE CHATTIME > #{nowTime} ORDER BY CHATTIME
+		]]>
+	
+	</select>
+	
+	<select id="getChatListByRecentSql" parameterType="int" resultMap="ChatList">
+		<![CDATA[
+		SELECT CHATNO,CHATNAME,CHATCONTENT,CHATTIME
+		FROM CHAT WHERE CHATNO > (SELECT MAX(CHATNO) - #{number} FROM CHAT) ORDER BY CHATTIME
+		]]>
+	</select>
+	
+	<select id="getChatListByRecentStringSql" parameterType="String" resultMap="ChatList">
+		<![CDATA[
+		SELECT CHATNO,CHATNAME,CHATCONTENT,CHATTIME
+		FROM CHAT WHERE CHATNO > #{charNo} ORDER BY CHATTIME
+		]]>
+	
+	</select>
+	
+	<insert id="submitSql" parameterType="java.util.HashMap">
+		INSERT INTO CHAT VALUES(CHATNOSQ.NEXTVAL, #{chatName}, #{chatContent}, SYSDATE)
+	</insert>
+
+
+
+</mapper>

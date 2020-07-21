@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.beerstory">
+
+	<resultMap type="BeerStoryDto" id="BeerStoryList">
+		<result property="storyNo" column="STORY_NO"/>
+		<result property="storyName" column="STORY_NAME"/>
+		<result property="storyLink" column="STORY_LINK"/>
+		<result property="storyImg" column="STORY_IMG"/>
+	</resultMap>
+
+	<insert id="InsertOneSql" parameterType="BeerStoryDto">
+		INSERT INTO BEER_STORY
+		VALUES (STORYSQ.NEXTVAL, #{storyName},#{storyLink},#{storyImg})
+	</insert>
+	
+	<update id="UpdateOneSql" parameterType="BeerStoryDto">
+		UPDATE BEER_STORY SET STORY_NAME=#{storyName}, STORY_LINK=#{storyLink} WHERE STORY_NO=#{storyNo}
+	</update>
+	
+	<delete id="DeleteOneSql" parameterType="int">
+		DELETE FROM BEER_STORY
+		WHERE STORY_NO = #{storyNo}
+	</delete>
+	
+	<select id="GetAllListSql" resultMap="BeerStoryList">
+		SELECT *
+		FROM BEER_STORY
+		ORDER BY STORY_NO DESC
+	</select>
+	
+	<select id="SelectOneSql" parameterType="int" resultMap="BeerStoryList">
+		SELECT *
+		FROM BEER_STORY
+		WHERE STORY_NO=#{storyNo}
+	</select>
+	
+
+</mapper>

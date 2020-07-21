@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.comment">
+
+  <resultMap type="CommentDto" id="CommentList">
+  	<result property="commentNo" column="COMMENT_NO"/>
+  	<result property="postNo" column="POST_NO"/>
+  	<result property="groupNo" column="GROUP_NO"/>
+  	<result property="groupSq" column="GROUP_SQ"/>
+  	<result property="replyId" column="REPLY_ID"/>
+  	<result property="commentContent" column="COMMENT_CONTENT"/>
+  	<result property="commentDate" column="COMMENT_DATE"/>
+  	<result property="userId" column="USER_ID"/>
+  </resultMap>
+  
+  
+    <resultMap type="java.util.HashMap" id="CommentCount">
+        <result javaType="java.lang.String" column="POST_NO" property="POST_NO"/>
+        <result javaType="java.lang.String" column="COUNT" property="COUNT"/>
+    </resultMap>
+  
+  <!-- writeFreeCommentSql(자유게시판 댓글 쓰기) -->
+  <insert id="writeFreeCommentSql" parameterType="java.util.HashMap">
+   INSERT INTO COMMENT_TB
+   VALUES(CMTFREESEQ.NEXTVAL,#{postNo},#{boardCode},CMTFREEGROUPSEQ.NEXTVAL,1,NULL,#{commentContent},SYSDATE,#{userId})
+  </insert>
+  
+  <!-- writeNoticeCommentSql(공지게시판 댓글 쓰기) -->
+  <insert id="writeNoticeCommentSql" parameterType="java.util.HashMap">
+  INSERT INTO COMMENT_TB
+  VALUES(CMTNOTICESEQ.NEXTVAL,#{postNo},#{boardCode},CMTFREEGROUPSEQ.NEXTVAL,1,NULL,#{commentContent},SYSDATE,#{userId})
+  </insert>
+  
+  <!-- commentListSql(댓글 목록 가져오기) -->
+  <select id="commentListSql" parameterType="java.util.HashMap" resultMap="CommentList">
+  	SELECT COMMENT_NO,POST_NO,GROUP_NO,GROUP_SQ,REPLY_ID,COMMENT_CONTENT,COMMENT_DATE,USER_ID
+  	FROM COMMENT_TB
+	WHERE BOARD_CODE = #{boardCode} AND POST_NO=#{postNo}
+	ORDER BY GROUP_NO, GROUP_SQ 
+  </select>
+  
+  <!-- updateCommentSql(댓글 수정) -->
+  <update id="updateCommentSql" parameterType="java.util.HashMap">
+  	UPDATE COMMENT_TB
+  	SET COMMENT_CONTENT=#{commentContent}
+  	WHERE POST_NO=#{postNo} AND COMMENT_NO=#{commentNo} AND BOARD_CODE=#{boardCode}
+  </update>
+  
+  <!-- deleteCommentSql(댓글 삭제) -->
+  <delete id="deleteCommentSql" parameterType="java.util.HashMap">
+  	DELETE FROM COMMENT_TB WHERE POST_NO =#{postNo} AND BOARD_CODE=#{boardCode} AND COMMENT_NO=#{commentNo}
+  </delete>
+  
+  <!-- selectParentCommentSql (부모 댓글 가져오기) -->
+  <select id="selectParentCommentSql" resultMap="CommentList" parameterType="java.util.HashMap">
+  	SELECT COMMENT_NO,POST_NO,GROUP_NO,GROUP_SQ,REPLY_ID,COMMENT_CONTENT,COMMENT_DATE,USER_ID
+  	FROM COMMENT_TB
+  	WHERE BOARD_CODE = #{boardCode} AND POST_NO =#{postNo} AND COMMENT_NO =#{commentNo}
+  </select>
+  
+  <!-- lastGroupsqSql(부모댓글 그룹댓글 마지막 순서 가져오기) -->
+  <select id="lastGroupsqSql" parameterType="java.util.HashMap" resultType="int">
+  	SELECT GROUP_SQ 
+	FROM ( SELECT ROWNUM RN , TEMP.* 
+			FROM ( SELECT * 
+					FROM COMMENT_TB
+					WHERE POST_NO = #{postNo} AND GROUP_NO = #{groupNo} AND BOARD_CODE=#{boardCode}
+					ORDER BY GROUP_SQ DESC ) TEMP )
+	WHERE RN=1 
+  </select>
+  
+  <!-- writeFreereplyCommentSql(자유게시판 대댓글 달기) -->
+  <insert id="writeFreereplyCommentSql" parameterType="java.util.HashMap">
+ 	INSERT INTO COMMENT_TB
+ 	VALUES(CMTFREESEQ.NEXTVAL,#{postNo},#{boardCode},#{groupNo},#{groupSq},#{replyId},#{commentContent},SYSDATE,#{userId})
+  </insert>
+	
+  <!-- writeNoticereplyCommentSql(공지게시판 대댓글 달기) -->
+  <insert id="writeNoticereplyCommentSql">
+  	INSERT INTO COMMENT_TB
+ 	VALUES(CMTNOTICESEQ.NEXTVAL,#{postNo},#{boardCode},#{groupNo},#{groupSq},#{replyId},#{commentContent},SYSDATE,#{userId})
+  </insert>
+  
+  <!-- getCommentCountSql (댓글 개수) -->
+  <select id="getCommentCountSql" resultType="java.util.HashMap">
+    SELECT POST_NO,COUNT(*) AS COUNT
+	FROM COMMENT_TB
+	WHERE POST_NO IN (SELECT POST_NO
+						FROM (SELECT ROWNUM RN,TEMP.*
+								FROM (SELECT POST.*
+										FROM POST
+										WHERE BOARD_CODE=#{boardCode}
+										ORDER BY GROUP_NO DESC,GROUP_SQ) TEMP) 
+								WHERE ( RN BETWEEN #{startRow} AND #{endRow} ) AND BOARD_CODE= #{boardCode} )
+								AND BOARD_CODE=#{boardCode}
+								GROUP BY POST_NO
+  </select>
+</mapper>

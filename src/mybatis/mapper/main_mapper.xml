@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.main">
+<resultMap type="BestbeerDto" id="BestbeerList">
+	<result property="beerNo" column="BEER_NO"/>
+	<result property="beerKorName" column="BEER_KOR_NAME"/>
+	<result property="beerAbv" column="BEER_ABV"/>
+	<result property="starAvg" column="STAR_AVG"/>
+	<result property="countReview" column="RV"/>
+	<result property="typeName" column="TYPE_NAME"/>
+	<result property="beerPic" column="BEER_PIC"/>
+</resultMap>
+
+<resultMap type="RecentReviewDto" id="RecentReviewList">
+	<result property="userId" column="USER_ID"/>
+	<result property="reviewContent" column="REVIEW_CONTENT"/>
+	<result property="reviewStar" column="REVIEW_STAR"/>
+	<result property="beerKorName" column="BEER_KOR_NAME"/>
+	<result property="reviewDate" column="REVIEW_DATE"/>
+	<result property="beerNo" column="BEER_NO"/>
+</resultMap>
+
+<select id="bestStarSql" resultMap="BestbeerList">
+	<![CDATA[
+	SELECT * FROM ( 
+		SELECT BEER_NO, BEER_KOR_NAME, BEER_ABV, AVG(REVIEW_STAR) STAR_AVG, COUNT(*) RV, TYPE_NAME, BEER_PIC,ROW_NUMBER() OVER(ORDER BY AVG(REVIEW_STAR) DESC) RR
+		FROM REVIEW
+		JOIN BEER USING (BEER_NO)
+		JOIN TYPE USING (TYPE_CODE)
+		GROUP BY BEER_NO, BEER_KOR_NAME, BEER_ABV, TYPE_NAME, BEER_PIC
+		)
+		WHERE RR<4
+	]]>
+</select>
+
+<select id="countReviewSql" resultMap="BestbeerList">
+	<![CDATA[
+		SELECT * FROM ( 
+		SELECT BEER_NO, BEER_KOR_NAME, BEER_ABV, AVG(REVIEW_STAR) AS STAR_AVG, COUNT(*) AS RV, TYPE_NAME, BEER_PIC,ROW_NUMBER() OVER(ORDER BY COUNT(*) DESC) RR 
+		FROM REVIEW
+		JOIN BEER USING (BEER_NO)
+		JOIN TYPE USING (TYPE_CODE) 
+		GROUP BY BEER_NO, BEER_KOR_NAME, BEER_ABV, TYPE_NAME, BEER_PIC)
+		WHERE RR<4
+	]]>
+</select>
+
+<select id="getRecentReviewlistSql" resultMap="RecentReviewList">
+<![CDATA[
+	SELECT * FROM (
+				SELECT USER_ID, REVIEW_CONTENT, REVIEW_STAR, BEER_KOR_NAME, REVIEW_DATE, BEER_NO, ROW_NUMBER() OVER(ORDER BY REVIEW_DATE DESC) RR
+				FROM REVIEW
+				JOIN BEER USING (BEER_NO)
+				)
+	WHERE RR<6
+]]>
+</select>
+
+
+</mapper>

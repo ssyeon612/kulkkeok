@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.admin">
+	<resultMap type="UserDto" id="User">
+		<result property="userId" column="USER_ID"/>
+		<result property="userPw" column="USER_PW"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="userEmail" column="USER_EMAIL"/>
+		<result property="userPhone" column="USER_PHONE"/>
+	</resultMap>
+	
+	
+	<resultMap type="ReviewDto" id="ReviewList">
+		<result property="reviewNo" column="REVIEW_NO"/>
+		<result property="reviewContent" column="REVIEW_CONTENT"/>
+		<result property="reviewDate" column="REVIEW_DATE"/>
+		<result property="reviewStar" column="REVIEW_STAR"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="beerNo" column="BEER_NO"/>
+	</resultMap>
+	
+	<resultMap type="MoimDto" id="MoimList">
+		<result property="moimNo" column="MOIM_NO"/>
+		<result property="moimTitle" column="MOIM_TITLE"/>
+		<result property="moimContent" column="MOIM_CONTENT"/>
+		<result property="moimWriteDate" column="MOIM_WRITEDATE"/>
+		<result property="moimDate" column="MOIM_DATE"/>
+		<result property="moimPlaceName" column="MOIM_PLACENAME"/>
+		<result property="moimPlaceAdd" column="MOIM_PLACEADD"/>
+		<result property="categoryNo" column="CATEGORY_NAME"/>
+		<result property="userId" column="USER_ID"/>
+	</resultMap>
+	
+	 <resultMap type="PostDto" id="PostList">
+	  	<result property="postNo" column="POST_NO"/>
+	  	<result property="groupNo" column="GROUP_NO"/>
+	  	<result property="groupSq" column="GROUP_SQ"/>
+	  	<result property="titleTab" column="TITLE_TAB"/>
+	  	<result property="postTitle" column="POST_TITLE"/>
+	  	<result property="postContent" column="POST_CONTENT"/>
+	  	<result property="postDate" column="POST_DATE"/>
+	  	<result property="postViews" column="POST_VIEWS"/>
+	  	<result property="userId" column="USER_ID"/>
+  </resultMap>
+  
+    <resultMap type="CommentDto" id="CommentList">
+  	<result property="commentNo" column="COMMENT_NO"/>
+  	<result property="postNo" column="POST_NO"/>
+  	<result property="groupNo" column="GROUP_NO"/>
+  	<result property="groupSq" column="GROUP_SQ"/>
+  	<result property="replyId" column="REPLY_ID"/>
+  	<result property="commentContent" column="COMMENT_CONTENT"/>
+  	<result property="commentDate" column="COMMENT_DATE"/>
+  	<result property="userId" column="USER_ID"/>
+  </resultMap>
+  
+  <resultMap type="MoimCommentDto" id="MoimCommentList">
+  	<result property="mmNo" column="MM_NO"/>
+  	<result property="mmContent" column="MM_CONTENT"/>
+  	<result property="mmDate" column="MM_DATE"/>
+  	<result property="groupNo" column="GROUP_NO"/>
+  	<result property="groupSq" column="GROUP_SQ"/>
+  	<result property="replyId" column="REPLY_ID"/>
+  	<result property="userId" column="USER_ID"/>
+  	<result property="moimNo" column="MOIM_NO"/>
+  </resultMap>
+
+	
+	<select id="getAllUserInfoSql" resultMap="User">
+		SELECT *
+		FROM USER_TB
+		WHERE GRADE_CODE='USER'
+	</select>
+	
+	<!--  << ForEach 문 >>
+			collection : 전달받은 인자값 (Map, List (HashMap X))
+			item : 전달받은 인자값을 다른 이름으로 대체
+			open : 해당 구문이 시작할 때, (
+			close : 해당 구문이 끝날 때, )
+			separator : 한 번 이상 반복할 때 반복되는 사이에 해당 문을 넣어줌.
+	
+	 -->
+	<delete id="userDeleteSql" parameterType="java.util.Map">
+		DELETE FROM USER_TB
+		WHERE USER_ID IN
+		<foreach collection="idList" item="userId" open="(" separator="," close=")">
+				#{userId}
+		</foreach>
+	</delete>
+	
+	<select id="getUserReviewListSql" parameterType="String" resultMap="ReviewList">
+		SELECT *
+		FROM REVIEW
+		WHERE USER_ID=#{userId}
+	</select>
+	
+	<select id="getUserPostListSql" parameterType="String" resultMap="PostList">
+		SELECT *
+		FROM POST
+		WHERE BOARD_CODE='FREE' AND USER_ID=#{userId}
+	</select>
+	
+	<select id="getUserCommentListSql" parameterType="String" resultMap="CommentList">
+		SELECT *
+		FROM COMMENT_TB
+		WHERE BOARD_CODE='FREE' AND USER_ID =#{userId}
+	</select>
+	
+	<select id="getUserMoimListSql" parameterType="String" resultMap="MoimList">
+		SELECT *FROM MOIM_BOARD
+		JOIN CATEGORY USING (CATEGORY_CODE)
+		WHERE USER_ID=#{userId}
+	</select>
+	
+	<select id="getUserMoimCommentListSql" parameterType="String" resultMap="MoimCommentList">
+		SELECT *
+		FROM MOIM_COMMENT
+		WHERE USER_ID=#{userId}
+	</select>
+	
+	<delete id="deleteUserReviewSql" parameterType="java.util.Map">
+		DELETE FROM REVIEW
+		WHERE REVIEW_NO IN
+		<foreach collection="noList" item="no" open="(" separator="," close=")">
+			#{no}
+		</foreach>
+	</delete>
+	
+	<delete id="deleteUserPostSql" parameterType="java.util.Map">
+		DELETE FROM POST
+		WHERE POST_NO IN
+		<foreach collection="noList" item="no" open="(" separator="," close=")">
+			#{no} 
+		</foreach>
+		AND BOARD_CODE='FREE'
+	</delete>
+	
+	<delete id="deleteUserCommentSql" parameterType="java.util.Map">
+		DELETE FROM COMMENT_TB
+		WHERE COMMENT_NO IN
+		<foreach collection="noList" item="no" open="(" separator="," close=")">
+			#{no} 
+		</foreach>			
+		AND BOARD_CODE='FREE'
+	</delete>
+	
+	<delete id="deleteUserMoimSql" parameterType="java.util.Map">
+		DELETE FROM MOIM_BOARD
+		WHERE MOIM_NO IN
+		<foreach collection="noList" item="no" open="(" separator="," close=")">
+			#{no} 
+		</foreach>	
+	
+	</delete>
+	
+	<delete id="deleteUserMoimCommentSql" parameterType="java.util.Map">
+		DELETE FROM MOIM_COMMENT
+		WHERE MM_NO IN
+		<foreach collection="noList" item="no" open="(" separator="," close=")">
+			#{no} 
+		</foreach>			
+	</delete>
+	
+	<select id="getLastBeerNoSql" resultType="int">
+		SELECT BEER_NO
+		FROM (SELECT RANK() OVER(ORDER BY BEER_NO DESC) RN, BEER_NO FROM BEER)
+		WHERE RN = 1
+	</select>
+	
+	<insert id="insertBeerSql" parameterType="BeerDto">
+		INSERT INTO BEER
+		VALUES(#{beerNo},#{beerKorName},#{beerEngName},#{originCode},#{typeCode},#{beerAbv},#{beerDetail},#{beerPic})
+	</insert>
+	
+
+</mapper>

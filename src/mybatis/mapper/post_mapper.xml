@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="mybatis.mapper.post">
+  
+  <resultMap type="PostDto" id="PostList">
+  	<result property="postNo" column="POST_NO"/>
+  	<result property="groupNo" column="GROUP_NO"/>
+  	<result property="groupSq" column="GROUP_SQ"/>
+  	<result property="titleTab" column="TITLE_TAB"/>
+  	<result property="postTitle" column="POST_TITLE"/>
+  	<result property="postContent" column="POST_CONTENT"/>
+  	<result property="postDate" column="POST_DATE"/>
+  	<result property="postViews" column="POST_VIEWS"/>
+  	<result property="userId" column="USER_ID"/>
+  </resultMap>
+  
+  
+  
+  <!--  getTotalPostSql(게시글 개수 가져오기) : SELECT COUNT(*) FROM POST WHERE BOARD_CODE=? -->
+  <select id="getTotalPostSql" resultType="java.lang.Integer" parameterType="String">
+  	SELECT COUNT(*)
+  	FROM POST
+  	WHERE BOARD_CODE = #{boardCode}
+  </select>
+  
+  <!-- getPostListSql(게시물들 가져오기) -->	 
+  <select id="getPostListSql" parameterType="java.util.HashMap" resultMap="PostList" >
+  	SELECT POST_NO,GROUP_NO,GROUP_SQ,TITLE_TAB,POST_TITLE,POST_CONTENT,POST_DATE,POST_VIEWS,USER_ID
+  	FROM (SELECT ROWNUM RN,TEMP.* 
+  			FROM (SELECT *
+  					FROM POST
+  					WHERE BOARD_CODE = #{boardCode} ORDER BY GROUP_NO DESC,GROUP_SQ) TEMP)
+  	WHERE RN BETWEEN #{startRow} AND #{endRow}
+  </select>
+  
+  <!-- writeFreePostSql(자유게시판 글쓰기) -->
+  <insert id="writeFreePostSql" parameterType="PostDto">
+  	 INSERT INTO POST
+  	 VALUES(FREESQ.NEXTVAL,'FREE',FREEGROUPSQ.NEXTVAL,1,0,#{postTitle},#{postContent},SYSDATE,0,#{userId})
+  </insert>
+  
+  <!-- writeNoticePostSql(공지게시판 글쓰기) -->
+  <insert id="writeNoticePostSql" parameterType="PostDto">
+  	INSERT INTO POST
+  	VALUES(NOTICESQ.NEXTVAL,'NOTICE',NOTICEGROUPSQ.NEXTVAL,1,0,#{postTitle},#{postContent},SYSDATE,0,#{userId})
+  </insert>
+  
+  <!-- detailPostSql(해당 게시물 가져오기) -->
+  <select id="detailPostSql" parameterType="java.util.HashMap" resultMap="PostList">
+  	 SELECT POST_NO,GROUP_NO,GROUP_SQ,TITLE_TAB,POST_TITLE,POST_CONTENT,POST_DATE,POST_VIEWS,USER_ID
+  	 FROM POST
+  	 WHERE POST_NO = #{postNo} AND BOARD_CODE= #{boardCode}
+  </select>
+  
+  <!-- updateAnswerSql (답변쓰기 순서 변경) -->
+  <update id="updateAnswerSql" parameterType="java.util.HashMap">
+  	 <![CDATA[
+	  	 UPDATE POST
+	  	 SET GROUP_SQ = GROUP_SQ+1
+	  	 WHERE ( GROUP_NO=#{parentgroupno} AND GROUP_SQ > #{parentgroupsq} ) AND BOARD_CODE = #{boardCode}
+  	]]>
+  </update>
+  
+  <!-- writeFreeAnswerSql (자유게시판 답글 쓰기) -->
+
+  <insert id="writeFreeAnswerSql" parameterType="PostDto">
+  	INSERT INTO POST
+	VALUES(FREESQ.NEXTVAL,'FREE',#{groupNo},#{groupSq},#{titleTab},#{postTitle},#{postContent},SYSDATE,0,#{userId})
+  </insert>
+
+  
+  <!-- writeNoticeAnswerSql (공지게시판 답글 쓰기) -->
+
+  <insert id="writeNoticeAnswerSql" parameterType="PostDto">
+  	INSERT INTO POST
+	VALUES(NOTICESQ.NEXTVAL,'NOTICE',#{groupNo},#{groupSq},#{titleTab},#{postTitle},#{postContent},SYSDATE,0,#{userId})
+  </insert>
+
+  <!-- deletePostSql (글 삭제하기) -->
+  <delete id="deletePostSql" parameterType="java.util.HashMap">
+  	DELETE FROM POST
+  	WHERE POST_NO=#{postNo} AND BOARD_CODE=#{boardCode}
+  </delete>
+  
+  <!-- countViewsSql (조회수 카운트) -->
+  <update id="countViewsSql" parameterType="java.util.HashMap">
+  	UPDATE POST
+  	SET POST_VIEWS = POST_VIEWS+1 WHERE POST_NO=#{postNo} AND BOARD_CODE = #{boardCode}
+  </update>
+  
+  <!-- updatePostSql(글 수정) -->
+  <update id="updatePostSql" parameterType="java.util.HashMap">
+  	UPDATE POST SET POST_TITLE=#{postTitle} , POST_CONTENT=#{postContent}
+  	WHERE POST_NO =#{postNo} AND BOARD_CODE=#{boardCode}
+  </update>
+  
+  <!-- getbestPostListSql (인기글 가져오기) -->
+  <select id="getbestPostListSql" parameterType="String" resultMap="PostList">
+	SELECT P.* 
+	FROM POST P 
+	WHERE ( P.POST_NO IN ( SELECT TEMP.POST_NO
+							FROM (SELECT POST_NO,COUNT(*) CNT
+									FROM COMMENT_TB 
+									WHERE BOARD_CODE=#{boardCode} 
+									GROUP BY POST_NO) TEMP
+							WHERE TEMP.CNT>=5 ) )
+	AND P.BOARD_CODE = #{boardCode}
+  
+  </select>
+  
+  
+ 
+  </mapper>

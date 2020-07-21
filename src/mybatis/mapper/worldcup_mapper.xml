@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.worldcup">
+
+	<resultMap type="BeerDto" id="BeerList">
+		<result property="typeCode" column="TYPE_CODE"/>
+		<result property="originCode" column="ORIGIN_CODE"/>
+		<result property="beerNo" column="BEER_NO"/>
+		<result property="beerKorName" column="BEER_KOR_NAME"/>
+		<result property="beerEngName" column="BEER_ENG_NAME"/>
+		<result property="beerAbv" column="BEER_ABV"/>
+		<result property="beerDetail" column="BEER_DETAIL"/>
+		<result property="beerPic" column="BEER_PIC"/>
+		<result property="originName" column="ORIGIN_NAME"/>
+		<result property="typeName" column="TYPE_NAME"/>
+	</resultMap>
+	
+	<select id="getBeerListSql" parameterType="int" resultMap="BeerList">
+		SELECT *
+		FROM BEER
+		WHERE BEER_NO = #{beerNo}
+	</select>
+	
+	<select id="getBeerOneSql" parameterType="int" resultMap="BeerList">
+		SELECT *
+		FROM BEER
+		WHERE BEER_NO = #{win}
+	</select>
+	
+	<select id="confirmWorldcupBeerSql" parameterType="int" resultMap="BeerList">
+		 SELECT *
+		 FROM WORLDCUP_BEER
+		 WHERE BEER_NO = #{beerNo}
+	</select>
+	
+	<insert id="insertWorldcupBeerSql" parameterType="int">
+		INSERT INTO WORLDCUP_BEER
+		VALUES(#{beerNo},1)
+	</insert>
+	
+	<update id="countWorldcupBeerSql" parameterType="int">
+		UPDATE WORLDCUP_BEER SET CUPCOUNT = CUPCOUNT+1
+		WHERE BEER_NO = #{beerNo}
+	</update>
+	
+	<select id="getWorldcupRankingSql" resultType="java.util.HashMap">
+	 SELECT BEER_NO,CUPCOUNT
+	 FROM ( SELECT ROWNUM RN, TEMP.*
+			FROM (SELECT * 
+					FROM WORLDCUP_BEER
+					ORDER BY CUPCOUNT DESC)TEMP 
+			ORDER BY RN ASC )
+	WHERE RN BETWEEN 1 AND 10 
+	</select>
+
+</mapper>

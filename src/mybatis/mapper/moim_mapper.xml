@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.moim">
+	<resultMap type="MoimDto" id="MoimList">
+		<result property="moimNo" column="MOIM_NO"/>
+		<result property="moimTitle" column="MOIM_TITLE"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="categoryNo" column="CATEGORY_NAME"/>
+		<result property="moimContent" column="MOIM_CONTENT"/>
+		<result property="moimWriteDate" column="MOIM_WRITEDATE"/>
+		<result property="moimDate" column="MOIM_DATE"/>
+		<result property="moimPlaceName" column="MOIM_PLACENAME"/>
+		<result property="moimPlaceAdd" column="MOIM_PLACEADD"/>		
+	</resultMap>
+
+	<select id="getAllMoimListSql" parameterType="java.util.HashMap" resultMap="MoimList">
+		<![CDATA[
+		SELECT MOIM_NO, MOIM_TITLE, MOIM_CONTENT, MOIM_WRITEDATE, MOIM_DATE,MOIM_PLACENAME, MOIM_PLACEADD, CATEGORY_NAME, USER_ID
+		FROM (SELECT A.*, ROWNUM RNUM 
+				FROM (SELECT * 
+						FROM MOIM_BOARD
+						JOIN CATEGORY 
+         				USING (CATEGORY_CODE)
+         				ORDER BY MOIM_NO DESC) A)
+        WHERE RNUM>=#{startRow} AND RNUM<=#{endRow}
+        ]]>
+	</select>
+	
+	<select id="totalMoimSql" resultType="int">
+		SELECT COUNT(*) FROM MOIM_BOARD
+	</select>
+	
+	<select id="getMoimListNotClosedSql" resultMap="MoimList">
+		<![CDATA[
+		SELECT * 
+		FROM(SELECT MOIM_NO, MOIM_TITLE, MOIM_CONTENT, MOIM_WRITEDATE, MOIM_DATE, MOIM_PLACENAME, MOIM_PLACEADD, CATEGORY_NAME, USER_ID, ROW_NUMBER() OVER(ORDER BY MOIM_DATE ASC) RR
+        	FROM MOIM_BOARD
+        	JOIN CATEGORY USING (CATEGORY_CODE) WHERE (TRUNC(SYSDATE) - MOIM_DATE) <= 0
+                  ) WHERE RR<6
+        ]]>
+	</select>
+	
+	<select id="getMoimDetailSql" resultMap="MoimList" parameterType="int">
+		SELECT MOIM_NO, MOIM_TITLE, MOIM_CONTENT, MOIM_WRITEDATE, MOIM_DATE,MOIM_PLACENAME, MOIM_PLACEADD, CATEGORY_NAME, USER_ID
+		FROM MOIM_BOARD
+        JOIN CATEGORY USING (CATEGORY_CODE) WHERE MOIM_NO = #{moimNo}
+	</select>
+	
+	
+	<select id="getMyMoimListSql" parameterType="String" resultMap="MoimList">
+		SELECT * FROM MOIM_BOARD WHERE USER_ID = #{userId}
+	</select>
+	
+	<insert id="insertOneSql" parameterType="MoimDto">
+		INSERT INTO MOIM_BOARD
+		VALUES (MOIMSQ.NEXTVAL, #{moimTitle},#{moimContent},SYSDATE,#{moimDate},#{moimPlaceName},#{moimPlaceAdd},#{categoryNo},#{userId})
+	</insert>
+	
+	<update id="updateSql" parameterType="MoimDto">
+		UPDATE MOIM_BOARD 
+		SET MOIM_TITLE=#{moimTitle},CATEGORY_CODE=#{categoryNo},MOIM_CONTENT=#{moimContent},MOIM_DATE=#{moimDate},MOIM_PLACENAME=#{moimPlaceName},MOIM_PLACEADD=#{moimPlaceAdd}
+		WHERE MOIM_NO=#{moimNo}
+	</update>
+	
+	<delete id="deleteSql" parameterType="int">
+		DELETE FROM MOIM_BOARD WHERE MOIM_NO=#{moimNo}
+	</delete>
+	
+	<select id="getWriterEmailSql" parameterType="int" resultType="String">
+		SELECT USER_EMAIL FROM MOIM_BOARD
+        JOIN USER_TB USING(USER_ID) WHERE MOIM_NO = #{moimNo}
+	</select>
+	
+
+
+</mapper>

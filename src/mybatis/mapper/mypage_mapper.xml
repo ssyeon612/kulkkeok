@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.mypage">
+
+<resultMap type="BeerDto" id="BeerList">
+	<result property="typeCode" column="TYPE_CODE"/>
+	<result property="originCode" column="ORIGIN_CODE"/>
+	<result property="beerNo" column="BEER_NO"/>
+	<result property="beerKorName" column="BEER_KOR_NAME"/>
+	<result property="beerEngName" column="BEER_ENG_NAME"/>
+	<result property="beerAbv" column="BEER_ABV"/>
+	<result property="beerDetail" column="BEER_DETAIL"/>
+	<result property="beerPic" column="BEER_PIC"/>
+</resultMap>
+
+<resultMap type="ReviewDto" id="ReviewList">
+	<result property="reviewNo" column="REVIEW_NO"/>
+	<result property="reviewContent" column="REVIEW_CONTENT"/>
+	<result property="reviewDate" column="REVIEW_DATE"/>
+	<result property="reviewStar" column="REVIEW_STAR"/>
+	<result property="userId" column="USER_ID"/>
+	<result property="beerNo" column="BEER_NO"/>
+</resultMap>
+
+<resultMap type="MoimDto" id="MoimList">
+	<result property="moimNo" column="MOIM_NO"/>
+	<result property="moimTitle" column="MOIM_TITLE"/>
+	<result property="moimContent" column="MOIM_CONTENT"/>
+	<result property="moimWriteDate" column="MOIM_WRITEDATE"/>
+	<result property="moimDate" column="MOIM_DATE"/>
+	<result property="moimPlaceName" column="MOIM_PLACENAME"/>
+	<result property="moimPlaceAdd" column="MOIM_PLACEADD"/>
+	<result property="categoryNo" column="CATEGORY_NAME"/>
+	<result property="userId" column="USER_ID"/>
+</resultMap>
+
+<update id="updateSql" parameterType="UserDto">
+	UPDATE USER_TB
+	SET USER_PW = #{userPw}, USER_NAME = #{userName}, USER_EMAIL = #{userEmail}, USER_PHONE = #{userPhone}
+	WHERE USER_ID = #{userId}
+</update>
+
+<select id="getMyBeerListSql" resultMap="BeerList" parameterType="String">
+	SELECT *
+	FROM BEER B 
+	JOIN BOOKMARK M ON(M.USER_ID=#{userId} AND B.BEER_NO=M.BEER_NO)
+</select>
+
+<select id="getMyReviewListSql" parameterType="String" resultMap="ReviewList">
+	SELECT *
+	FROM REVIEW
+	WHERE USER_ID=#{userId}
+</select>
+
+<select id="getBeerList" parameterType="int" resultMap="BeerList">
+	SELECT *
+	FROM BEER
+	WHERE BEER_NO = #{no}
+</select>
+
+<select id="getMyMoimListSql" resultMap="MoimList">
+ SELECT MOIM_NO,MOIM_TITLE,MOIM_CONTENT, MOIM_WRITEDATE, MOIM_DATE, MOIM_PLACENAME, MOIM_PLACEADD, CATEGORY_NAME, USER_ID
+ FROM MOIM_BOARD
+ JOIN CATEGORY USING (CATEGORY_CODE)
+ WHERE USER_ID=#{userId}
+</select>
+
+<delete id="deleteSql" parameterType="java.util.HashMap" >
+	DELETE FROM USER_TB
+	WHERE USER_ID=#{userId} AND USER_PW=#{userPw}
+</delete>
+
+
+
+</mapper>

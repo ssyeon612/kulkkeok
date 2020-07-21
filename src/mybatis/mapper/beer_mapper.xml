@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.beer">
+<resultMap type="BeerDto" id="BeerList">
+	<result property="typeCode" column="TYPE_CODE"/>
+	<result property="originCode" column="ORIGIN_CODE"/>
+	<result property="beerNo" column="BEER_NO"/>
+	<result property="beerKorName" column="BEER_KOR_NAME"/>
+	<result property="beerEngName" column="BEER_ENG_NAME"/>
+	<result property="beerAbv" column="BEER_ABV"/>
+	<result property="beerDetail" column="BEER_DETAIL"/>
+	<result property="beerPic" column="BEER_PIC"/>
+	<result property="originName" column="ORIGIN_NAME"/>
+	<result property="typeName" column="TYPE_NAME"/>
+</resultMap>
+
+<select id="allBeerListSql" resultMap="BeerList">
+	SELECT TYPE_CODE,ORIGIN_CODE,BEER_NO,BEER_KOR_NAME,BEER_ENG_NAME,BEER_ABV,BEER_PIC,BEER_DETAIL,TYPE_NAME
+	FROM BEER
+	JOIN ORIGIN USING(ORIGIN_CODE)
+	JOIN TYPE USING(TYPE_CODE) ORDER BY BEER_ENG_NAME
+</select>
+
+<select id="typeOfBeerListTypeSql" parameterType="String" resultMap="BeerList">
+	SELECT TYPE_CODE,ORIGIN_CODE,BEER_NO,BEER_KOR_NAME,BEER_ENG_NAME,BEER_ABV,BEER_PIC,BEER_DETAIL,TYPE_NAME
+	FROM BEER
+	JOIN TYPE USING(TYPE_CODE)
+	WHERE TYPE_NAME LIKE #{name}
+	ORDER BY BEER_ENG_NAME
+</select>
+
+<select id="typeOfBeerListOriginSql" parameterType="String" resultMap="BeerList">
+	SELECT TYPE_CODE,ORIGIN_CODE,BEER_NO,BEER_KOR_NAME,BEER_ENG_NAME,BEER_ABV,BEER_PIC,BEER_DETAIL
+	FROM BEER
+	WHERE ORIGIN_CODE = #{orginCode}
+	ORDER BY BEER_ENG_NAME
+</select>
+
+
+<select id="typeOfBeerListNameSql" parameterType="String"  resultMap="BeerList">
+	SELECT TYPE_CODE,ORIGIN_CODE,BEER_NO,BEER_KOR_NAME,BEER_ENG_NAME,BEER_ABV,BEER_PIC,BEER_DETAIL
+	FROM BEER
+	WHERE BEER_KOR_NAME LIKE #{name} OR UPPER(BEER_ENG_NAME) LIKE UPPER(#{name})
+	ORDER BY BEER_ENG_NAME
+</select>
+
+<select id="selectOneSql" parameterType="int" resultMap="BeerList">
+	SELECT TYPE_CODE,ORIGIN_CODE,BEER_NO,BEER_KOR_NAME,BEER_ENG_NAME,BEER_ABV,BEER_PIC,BEER_DETAIL,ORIGIN_NAME,TYPE_NAME
+	FROM BEER
+	JOIN ORIGIN USING(ORIGIN_CODE)
+	JOIN TYPE USING(TYPE_CODE)
+	WHERE BEER_NO=#{beerNo}
+</select>
+
+<select id="otherOriginBeerListSql" resultMap="BeerList">
+	SELECT TYPE_CODE,ORIGIN_CODE,BEER_NO,BEER_KOR_NAME,BEER_ENG_NAME,BEER_ABV,BEER_PIC,BEER_DETAIL
+	FROM BEER
+	WHERE ORIGIN_CODE NOT IN('KOREA','AMERICA','CHINA', 'BELGIUM', 'ENGLAND','GERMANY','CZECH') ORDER BY BEER_ENG_NAME
+	
+</select>
+
+<select id="otherTypeBeerListSql" resultMap="BeerList">
+SELECT TYPE_CODE,ORIGIN_CODE,BEER_NO,BEER_KOR_NAME,BEER_ENG_NAME,BEER_ABV,BEER_PIC,BEER_DETAIL,TYPE_NAME
+FROM BEER
+JOIN TYPE USING(TYPE_CODE)
+WHERE TYPE_NAME NOT LIKE '%라이트 라거%' AND
+	TYPE_NAME NOT LIKE '%도펠복%' AND
+	TYPE_NAME NOT LIKE '%페일 라거%' AND
+	TYPE_NAME NOT LIKE '%필스너' AND
+	TYPE_NAME NOT LIKE '%람빅%' AND
+	TYPE_NAME NOT LIKE '%밀맥주%' AND
+	TYPE_NAME NOT LIKE '%바이젠복%' AND
+	TYPE_NAME NOT LIKE '%벨지안 에일%' AND
+	TYPE_NAME NOT LIKE '%인디아 페일 에일%' AND
+	TYPE_NAME NOT LIKE '%스타우트%' AND
+	TYPE_NAME NOT LIKE '%쾰쉬%' ORDER BY BEER_ENG_NAME
+</select>
+
+<select id="StarAvgDtoSql" parameterType="int" resultType="int">
+	SELECT TRUNC(AVG(REVIEW_STAR)) 
+	FROM REVIEW
+	JOIN BEER USING(BEER_NO) 
+	GROUP BY BEER_NO
+	HAVING BEER_NO=#{beerNo}
+</select>
+
+</mapper>

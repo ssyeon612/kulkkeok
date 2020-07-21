@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.review">
+
+	<resultMap type="ReviewDto" id="ReviewList">
+		<result property="reviewNo" column="REVIEW_NO"/>
+		<result property="reviewContent" column="REVIEW_CONTENT"/>
+		<result property="reviewDate" column="REVIEW_DATE"/>
+		<result property="reviewStar" column="REVIEW_STAR"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="beerNo" column="BEER_NO"/>
+	</resultMap>
+	
+	<select id="getBeerReviewListSql" parameterType="int" resultMap="ReviewList">
+		SELECT *
+		FROM REVIEW
+		WHERE BEER_NO=#{beerNo}
+		ORDER BY REVIEW_DATE DESC
+	</select>
+	
+	<insert id="insertReviewSql" parameterType="ReviewDto">
+		INSERT INTO REVIEW
+		VALUES(REVIEWSQ.NEXTVAL, #{reviewContent}, SYSDATE, #{reviewStar}, #{userId}, #{beerNo})
+	</insert>
+	
+	<update id="updateReviewSql" parameterType="ReviewDto">
+		UPDATE REVIEW SET REVIEW_CONTENT=#{reviewContent}
+		WHERE REVIEW_NO=#{reviewNo}
+	</update>
+	
+	<delete id="deleteReviewSql" parameterType="java.util.HashMap">
+		DELETE FROM REVIEW
+		WHERE BEER_NO=#{beerNo} AND REVIEW_NO=#{reviewNo}
+	</delete>
+	
+	
+
+
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- db 접속 정보 파일(db.properties) 경로 -->
+	<properties resource="mybatis/db.properties"/>
+	
+	  <!-- 별명, 별칭 : 해당 클래스 파일의 별명을 지어준다. -->	
+  	<typeAliases>
+  		<typeAlias type="com.kulkkeok.model.dto.PostDto" alias="PostDto"/>
+  		<typeAlias type="com.kulkkeok.model.dto.CommentDto" alias="CommentDto"/>
+  		<typeAlias type="com.kulkkeok.model.dto.UserDto" alias="UserDto"/>
+  		<typeAlias type="com.kulkkeok.model.dto.BeerDto" alias="BeerDto"/>
+  		<typeAlias type="com.kulkkeok.model.dto.ReviewDto" alias="ReviewDto"/>
+  		<typeAlias type="com.kulkkeok.model.dto.MoimDto" alias="MoimDto"/>
+  		<typeAlias type="com.kulkkeok.model.dto.MoimCommentDto" alias="MoimCommentDto"/>
+  		<typeAlias type="com.kulkkeok.model.dto.BookMarkDto" alias="BookMarkDto"/>
+  		<typeAlias type="com.kulkkeok.model.dto.BeerStoryDto" alias="BeerStoryDto"/>
+  		<typeAlias type="com.kulkkeok.model.dto.MoimDto" alias="MoimDto"/>
+  		<typeAlias type="com.kulkkeok.model.dto.MoimCommentDto" alias="MoimCommentDto"/>  		
+  		<typeAlias type="com.kulkkeok.model.dto.BestbeerDto" alias="BestbeerDto"/>  		
+  		<typeAlias type="com.kulkkeok.model.dto.RecentReviewDto" alias="RecentReviewDto"/>  		
+  		<typeAlias type="chat.ChatDto" alias="ChatDto"/>  		
+  	</typeAliases>
+	
+	<!-- SqlSessionFactory는 데이터베이스와의 연결과 SQL의 실행에 대한 모든 것을 가진 가장 중요한 객체 -->
+	<!-- 
+		UNPOOLED : DB관련 요청이 올 때마다 실시간으로 Connection 객체를 OPEN하고 CLOSE 한다.
+		POOLED : Connection 객체들을 미리 만들어 놓고 관리.
+	 -->
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  
+  <!-- Mapper 경로 설정 -->
+  <mappers>
+    <mapper resource="mybatis/mapper/post_mapper.xml"/>
+    <mapper resource="mybatis/mapper/comment_mapper.xml"/>
+    <mapper resource="mybatis/mapper/login_mapper.xml"/>
+    <mapper resource="mybatis/mapper/beer_mapper.xml"/>
+    <mapper resource="mybatis/mapper/register_mapper.xml"/>
+    <mapper resource="mybatis/mapper/mypage_mapper.xml"/>
+    <mapper resource="mybatis/mapper/admin_mapper.xml"/>
+    <mapper resource="mybatis/mapper/review_mapper.xml"/>
+    <mapper resource="mybatis/mapper/bookmark_mapper.xml"/>
+    <mapper resource="mybatis/mapper/beerstory_mapper.xml"/>
+    <mapper resource="mybatis/mapper/moim_mapper.xml"/>
+    <mapper resource="mybatis/mapper/moimcomment_mapper.xml"/>
+    <mapper resource="mybatis/mapper/worldcup_mapper.xml"/>
+    <mapper resource="mybatis/mapper/main_mapper.xml"/>
+    <mapper resource="mybatis/mapper/chat_mapper.xml"/>
+  </mappers>
+</configuration>

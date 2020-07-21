@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.bookmark">
+
+	<resultMap type="BookMarkDto" id="BookMarkList">
+		<result property="beerNo" column="BEER_NO"/>
+		<result property="bookMarkStatus" column="BOOKMARK_STATUS"/>
+	</resultMap>
+
+	<select id="countBookMarkSql" parameterType="int" resultType="int">
+		SELECT COUNT(*)
+		FROM BOOKMARK
+		WHERE BOOKMARK_STATUS='Y'AND BEER_NO=#{beerNo}
+	</select>
+	
+	<select id="confirmBookmarkBeerSql" parameterType="java.util.HashMap" resultType="int" >
+		SELECT BEER_NO
+		FROM BOOKMARK
+		WHERE BOOKMARK_STATUS='Y' AND BEER_NO =#{beerNo} AND USER_ID=#{userId}
+	</select>
+	
+	<delete id="removeBookmarkBeerSql" parameterType="BookMarkDto" >
+		DELETE FROM BOOKMARK
+		WHERE BEER_NO=#{beerNo} AND USER_ID=#{userId}
+	</delete>
+	
+	<insert id="addBookMarkBeerSql" parameterType="BookMarkDto">
+		INSERT INTO BOOKMARK VALUES(#{beerNo},#{userId},#{bookMarkStatus})
+	</insert>
+	
+	
+	
+	
+
+</mapper>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>KULKKEOK</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <servlet>
+  	<servlet-name>kulkkeok_main</servlet-name>
+  	<servlet-class>com.kulkkeok.controller.MainController</servlet-class>
+  </servlet>
+     
+   <servlet>
+   	<servlet-name>kulkkeok_beer</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.BeerController</servlet-class>
+   </servlet>
+  
+   <servlet>
+   	<servlet-name>kulkkeok_beerStory</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.BeerStoryController</servlet-class>
+   </servlet>
+   
+   <servlet>
+   	<servlet-name>kulkkeok_comment</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.CommentController</servlet-class>
+   </servlet>
+    
+   <servlet>
+   	<servlet-name>kulkkeok_free</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.FreeController</servlet-class>
+   </servlet>
+   
+   <servlet>
+   	<servlet-name>kulkkeok_login</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.LoginController</servlet-class>
+   </servlet>
+   
+   <servlet>
+   	<servlet-name>kulkkeok_moimComment</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.MoimCommentController</servlet-class>
+   </servlet>
+   
+   <servlet>
+   	<servlet-name>kulkkeok_moim</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.MoimController</servlet-class>
+   </servlet>
+   
+   <servlet>
+   	<servlet-name>kulkkeok_mypage</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.MypageController</servlet-class>
+   </servlet>
+   
+   <servlet>
+   	<servlet-name>kulkkeok_notice</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.NoticeController</servlet-class>
+   </servlet>
+   
+   <servlet>
+   	<servlet-name>kulkkeok_register</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.RegisterController</servlet-class>
+   </servlet>
+   
+   <servlet>
+   	<servlet-name>kulkkeok_review</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.ReviewController</servlet-class>
+   </servlet>
+   
+   <servlet>
+   	<servlet-name>kulkkeok_contact</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.ContactController</servlet-class>
+   </servlet>
+   
+   <servlet>
+   	<servlet-name>kulkkeok_worldcup</servlet-name>
+   	<servlet-class>com.kulkkeok.controller.WorldCupController</servlet-class>
+   </servlet>
+   
+   
+   
+   <servlet-mapping>
+      <servlet-name>kulkkeok_main</servlet-name>
+      <url-pattern>/main.do</url-pattern>
+   </servlet-mapping>
+      
+   <servlet-mapping>
+      <servlet-name>kulkkeok_beer</servlet-name>
+      <url-pattern>/beer.do</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+   	  <servlet-name>kulkkeok_beerStory</servlet-name>
+   	  <url-pattern>/beerStory.do</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+   	  <servlet-name>kulkkeok_comment</servlet-name>
+   	  <url-pattern>/comment.do</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+   	  <servlet-name>kulkkeok_free</servlet-name>
+   	  <url-pattern>/free.do</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+   	  <servlet-name>kulkkeok_login</servlet-name>
+   	  <url-pattern>/login.do</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+   	  <servlet-name>kulkkeok_moimComment</servlet-name>
+   	  <url-pattern>/moimComment.do</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+   	  <servlet-name>kulkkeok_moim</servlet-name>
+   	  <url-pattern>/moim.do</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+   	  <servlet-name>kulkkeok_mypage</servlet-name>
+   	  <url-pattern>/mypage.do</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+   	  <servlet-name>kulkkeok_notice</servlet-name>
+   	  <url-pattern>/notice.do</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+   	  <servlet-name>kulkkeok_register</servlet-name>
+   	  <url-pattern>/register.do</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+   	  <servlet-name>kulkkeok_review</servlet-name>
+   	  <url-pattern>/review.do</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+   	  <servlet-name>kulkkeok_contact</servlet-name>
+   	  <url-pattern>/contact.do</url-pattern>
+   </servlet-mapping> 
+   
+   <servlet-mapping>
+   	<servlet-name>kulkkeok_worldcup</servlet-name>
+   	<url-pattern>/worldcup.do</url-pattern>
+   </servlet-mapping>  
+   
+  <servlet>
+  	<servlet-name>ChatSubmitController</servlet-name>
+  	<servlet-class>chat.ChatSubmitController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>ChatSubmitController</servlet-name>
+  	<url-pattern>/chatSubmitController</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+  	<servlet-name>ChatListController</servlet-name>
+  	<servlet-class>chat.ChatListController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>ChatListController</servlet-name>
+  	<url-pattern>/chatListController</url-pattern>
+  </servlet-mapping>
+  
+</web-app>
