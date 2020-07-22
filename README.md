@@ -23,13 +23,22 @@
 
 * * *
 ✏️ _Beer (Controller, Service, Dao, Dto) & Review (Controller, Service, Dto, Dto)_
-    - beerinfo.jsp
-    - beerinfo_write.jsp
-    - beerdetail.jsp
-    - beerdetail_review.jsp
-
-✏️ _LoginController, NaverDto, KakaoDto_
-    - login.jsp & callback.jsp
   
-- worldcup_win.jsp & testBeer.jsp
+  - beerinfo.jsp : 맥주 게시판
+    - 전체 및 검색 결과를 바탕으로 한 맥주 목록
+    - 맥주 이름, 나라, 종류별 검색 (Ajax)
+ 
+  - beerdetail.jsp : 맥주 상세 페이지
+    - 맥주 상세정보 (사용자가 해당 맥주에 매긴 별점 평균도 포함)
+    - 리뷰 목록 (CRUD)
+    - 북마크 (Ajax)
+    
+  - beerdetail_review.jsp : 맥주 리뷰 작성
+
+✏️ _login.jsp & callback.jsp_
+
+  - Naver, Kakao 로그인 API를 이용한 간편 로그인 서비스
+
+✏️ _worldcup_win.jsp & testBeer.jsp_
+  - 맥주 월드컵, 맥주 취향 찾기 컨텐츠 페이지 공유 서비스 (방문유도)
 
