@@ -12,7 +12,7 @@
   - Framework: Mybatis, jQuery, Bootstrap
   - DBMS: Oracle
   - Server: Apache Tomcat v9.0
-  - IDE: Eclipse
+  - IDE: Eclipse, Visual Studio Code
  
 🔖 **담당 파트**
   - 이름별, 나라별, 종류별 맥주 검색
