@@ -23,14 +23,13 @@
 
 * * *
 ✏️ _Beer (Controller, Service, Dao, Dto) & Review (Controller, Service, Dto, Dto)_
-  - beerinfo.jsp
-  - beerinfo_write.jsp
-  - beerdetail.jsp
-  - beerdetail_review.jsp
-  - 
+    - beerinfo.jsp
+    - beerinfo_write.jsp
+    - beerdetail.jsp
+    - beerdetail_review.jsp
 
 ✏️ _LoginController, NaverDto, KakaoDto_
-  - login.jsp & callback.jsp
+    - login.jsp & callback.jsp
   
 - worldcup_win.jsp & testBeer.jsp
 
