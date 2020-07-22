@@ -22,7 +22,7 @@
   - 카카오 공유하기
 
 * * *
-✏️ _Beer (Controller, Service, Dao, Dto) & Review (Controller, Service, Dto, Dto)_
+✏️ _Beer (Controller, Service, Dao, Dto) & Review (Controller, Service, Dao, Dto)_
   
   - beerinfo.jsp : 맥주 게시판
     - 전체 및 검색 결과를 바탕으로 한 맥주 목록
