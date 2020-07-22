@@ -35,10 +35,10 @@
     
   - beerdetail_review.jsp : 맥주 리뷰 작성
 
-✏️ _login.jsp & callback.jsp_
+✏️ login.jsp & callback.jsp
 
   - Naver, Kakao 로그인 API를 이용한 간편 로그인 서비스
 
-✏️ _worldcup_win.jsp & testBeer.jsp_
+✏️ worldcup_win.jsp & testBeer.jsp
   - 맥주 월드컵, 맥주 취향 찾기 컨텐츠 페이지 공유 서비스 (방문유도)
 
